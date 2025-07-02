@@ -215,7 +215,7 @@ class Login_Mananger{
             exit(1);
         }
 
-        file << user_name << '|' << password << endl;
+        file << user_name << '|' << encryption(password, password.length()) << endl;
         file.close();
 
         ofstream outfile (user_name + "tasklist.txt");
@@ -244,7 +244,7 @@ class Login_Mananger{
             stringstream ss(line);
             getline(ss,Uname,'|');
             getline(ss,Pwd,'|');
-            if(user_name == Uname && password == Pwd){
+            if(user_name == Uname && password == decryption(Pwd, password.length())){
                 infile.close();
                 return Uname;
             }

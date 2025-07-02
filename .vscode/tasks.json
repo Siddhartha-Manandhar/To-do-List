@@ -6,9 +6,9 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "Todolist.cpp",  // yesma afno cpp ko filename halne
+                "Source.cpp",  // yesma afno cpp ko filename halne
                 "-o",
-                "Todolist.exe", // output exe filename halne yeta
+                "Source.exe", // output exe filename halne yeta
                 "-lwinmm",                 // For PlaySoundA
                 "-lbgi",                   // WinBGIm library
                 "-lgdi32",                 // Required for WinBGIm (Windows GDI)
