@@ -275,71 +275,120 @@ class Login_Mananger{
 class Task_manager{
   public:
     void start_task(string user_name) {
-    File_manager file;
-    vector<Task> tasklist = file.load_tasks(user_name);
+        File_manager file;
+        vector<Task> tasklist = file.load_tasks(user_name);
 
-    if (tasklist.empty()) {
-        cout << "No tasks found.\n";
-        return;
+        if (tasklist.empty()) {
+            cout << "No tasks found.\n";
+            return;
+        }
+
+        cout << "\nSelect a task to start:\n";
+        for (size_t i = 0; i < tasklist.size(); ++i) {
+            cout << i + 1 << ". ";
+            tasklist[i].display_task();
+        }
+
+        int choice;
+        cout << "Enter the number of the task you want to start: ";
+        cin >> choice;
+
+        if (choice < 1 || choice > tasklist.size()) {
+            cout << "Invalid choice.\n";
+            return;
+        }
+
+        Task &selected_task = tasklist[choice - 1];
+
+        Timer timer;
+        cout << "Enter time to complete the task (hr min sec): ";
+        cin >> timer.hr >> timer.min >> timer.sec;
+        cin.ignore();
+
+        selected_task.display_task();
+        timer.StartTimer();
+
+        char completed_choice;
+        cout << "Have you completed the task? (y/n): ";
+        cin >> completed_choice;
+
+        if (completed_choice == 'y' || completed_choice == 'Y') {
+            selected_task.completed = Completed;
+            cout << "Task marked as completed.\n";
+        } else {
+            cout << "Task remains pending.\n";
+        }
+
+        // Save updated tasks back to the file
+        fstream outfile(user_name + "tasklist.txt", ios::out | ios::trunc);
+        if (!outfile) {
+            cout << "File could not be opened for writing.\n";
+            return;
+        }
+
+        for (const auto &task : tasklist) {
+            outfile << task.taskname << '|'
+                    << task.description << '|'
+                    << task.priority << '|'
+                    << task.completed << '|'
+                    << task.due_date.year << '-'
+                    << task.due_date.month << '-'
+                    << task.due_date.day << endl;
+        }
+
+        outfile.close();
     }
 
-    cout << "\nSelect a task to start:\n";
-    for (size_t i = 0; i < tasklist.size(); ++i) {
-        cout << i + 1 << ". ";
-        tasklist[i].display_task();
+    void delete_task(string user_name){
+        File_manager file;
+        vector<Task> tasklist = file.load_tasks(user_name);
+
+        if(tasklist.empty()){
+            cout << "No tasks to delete.\n";
+            return;
+        }
+
+        cout << "\nAll Tasks:\n";
+        for(size_t i = 0; i < tasklist.size(); i++){
+            cout << i + 1 << ". ";
+            tasklist[i].display_task();
+        }
+
+        int del_choice;
+        cout << "Enter the number of the task to delete: ";
+        cin >> del_choice;
+        cin.ignore();
+
+        if(del_choice < 1 || del_choice > tasklist.size()){
+            cout << "Invalid choice.\n";
+            return;
+        }
+
+        tasklist.erase(tasklist.begin() + del_choice - 1);
+
+        fstream outfile(user_name + "tasklist.txt", ios::out | ios::trunc);
+        if(!outfile){
+            cout << "File could not be opened.\n";
+            return;
+        }
+
+        for(const auto &task : tasklist){
+            outfile << task.taskname << '|'
+                    << task.description << '|'
+                    << task.priority << '|'
+                    << task.completed << '|'
+                    << task.due_date.year << '-'
+                    << task.due_date.month << '-'
+                    << task.due_date.day << endl;
+        }
+
+        outfile.close();
+        cout << "Task deleted successfully.\n";
     }
-
-    int choice;
-    cout << "Enter the number of the task you want to start: ";
-    cin >> choice;
-
-    if (choice < 1 || choice > tasklist.size()) {
-        cout << "Invalid choice.\n";
-        return;
-    }
-
-    Task &selected_task = tasklist[choice - 1];
-
-    Timer timer;
-    cout << "Enter time to complete the task (hr min sec): ";
-    cin >> timer.hr >> timer.min >> timer.sec;
-    cin.ignore();
-
-    selected_task.display_task();
-    timer.StartTimer();
-
-    char completed_choice;
-    cout << "Have you completed the task? (y/n): ";
-    cin >> completed_choice;
-
-    if (completed_choice == 'y' || completed_choice == 'Y') {
-        selected_task.completed = Completed;
-        cout << "Task marked as completed.\n";
-    } else {
-        cout << "Task remains pending.\n";
-    }
-
-    // Save updated tasks back to the file
-    fstream outfile(user_name + "tasklist.txt", ios::out | ios::trunc);
-    if (!outfile) {
-        cout << "File could not be opened for writing.\n";
-        return;
-    }
-
-    for (const auto &task : tasklist) {
-        outfile << task.taskname << '|'
-                << task.description << '|'
-                << task.priority << '|'
-                << task.completed << '|'
-                << task.due_date.year << '-'
-                << task.due_date.month << '-'
-                << task.due_date.day << endl;
-    }
-
-    outfile.close();
-}
 
 };
+
+// In Menu class, update TaskMenu:
 
 class Menu{
     string user_name;
@@ -388,7 +437,8 @@ class Menu{
             cout << "4. View Tasks\n";
             cout << "5. View Daily Tasks\n";
             cout << "6. View Statistics\n";
-            cout << "7. Exit\n";
+            cout << "7. Delete Task\n";
+            cout << "8. Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
             cin.ignore();
@@ -421,9 +471,9 @@ class Menu{
                     vector<Task> tasklist = File_manager().load_tasks(user_name);
                     for(int i = 0; i < tasklist.size(); i++){
                         if(tasklist[i].is_completed() == Pending){
-                        cout << count << ". "; 
-                        tasklist[i].display_task();
-                        count++;
+                            cout << count << ". "; 
+                            tasklist[i].display_task();
+                            count++;
                         }
                     }
                     break;
@@ -442,10 +492,39 @@ class Menu{
                     break;
                 }
                 case 6:{
-                    //See Statistics
-                    break;
+                        vector<Task> tasklist = File_manager().load_tasks(user_name);
+                        int total = tasklist.size();
+                        int completed_count = 0;
+                        int pending_count = 0;
+
+                        for (auto &task : tasklist) {
+                            if (task.is_completed() == Completed)
+                                completed_count++;
+                            else
+                                pending_count++;
+                        }
+
+                        cout << "\n--- Task Statistics ---\n";
+                        cout << "Total Tasks: " << total << endl;
+                        cout << "Completed Tasks: " << completed_count << endl;
+                        cout << "Pending Tasks: " << pending_count << endl;
+
+                        if (total > 0) {
+                            double percentage = (static_cast<double>(completed_count) / total) * 100.0;
+                            cout << "Completion Percentage: " << percentage << "%" << endl;
+                        } else {
+                            cout << "No tasks to display statistics.\n";
+                        }
+                        cout << "------------------------\n";
+                        break;
+                    
                 }
                 case 7:{
+                    Task_manager T;
+                    T.delete_task(user_name);
+                    break;
+                }
+                case 8:{
                     choice = 99;
                     break;
                 }
