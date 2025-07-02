@@ -110,14 +110,6 @@ class Task{
 
     }
 
-    void start_task(){
-        Timer timer;
-        cout << "Enter time to complete task(hr min sec): ";
-        cin >> timer.hr >> timer.min >> timer.sec;
-        display_task();
-        timer.StartTimer();
-    }
-    
     bool is_today(){
         
         if(due_date.year == due_date.get_today_date().year && due_date.month == due_date.get_today_date().month && due_date.day == due_date.get_today_date().day){
@@ -131,6 +123,7 @@ class Task{
     }
 
     friend class File_manager;
+    friend class Task_manager;
 
 };
 
@@ -279,6 +272,74 @@ class Login_Mananger{
     }
 
 };
+class Task_manager{
+  public:
+    void start_task(string user_name) {
+    File_manager file;
+    vector<Task> tasklist = file.load_tasks(user_name);
+
+    if (tasklist.empty()) {
+        cout << "No tasks found.\n";
+        return;
+    }
+
+    cout << "\nSelect a task to start:\n";
+    for (size_t i = 0; i < tasklist.size(); ++i) {
+        cout << i + 1 << ". ";
+        tasklist[i].display_task();
+    }
+
+    int choice;
+    cout << "Enter the number of the task you want to start: ";
+    cin >> choice;
+
+    if (choice < 1 || choice > tasklist.size()) {
+        cout << "Invalid choice.\n";
+        return;
+    }
+
+    Task &selected_task = tasklist[choice - 1];
+
+    Timer timer;
+    cout << "Enter time to complete the task (hr min sec): ";
+    cin >> timer.hr >> timer.min >> timer.sec;
+    cin.ignore();
+
+    selected_task.display_task();
+    timer.StartTimer();
+
+    char completed_choice;
+    cout << "Have you completed the task? (y/n): ";
+    cin >> completed_choice;
+
+    if (completed_choice == 'y' || completed_choice == 'Y') {
+        selected_task.completed = Completed;
+        cout << "Task marked as completed.\n";
+    } else {
+        cout << "Task remains pending.\n";
+    }
+
+    // Save updated tasks back to the file
+    fstream outfile(user_name + "tasklist.txt", ios::out | ios::trunc);
+    if (!outfile) {
+        cout << "File could not be opened for writing.\n";
+        return;
+    }
+
+    for (const auto &task : tasklist) {
+        outfile << task.taskname << '|'
+                << task.description << '|'
+                << task.priority << '|'
+                << task.completed << '|'
+                << task.due_date.year << '-'
+                << task.due_date.month << '-'
+                << task.due_date.day << endl;
+    }
+
+    outfile.close();
+}
+
+};
 
 class Menu{
     string user_name;
@@ -351,8 +412,8 @@ class Menu{
                     break;
                 }
                 case 3:{
-                    Task T;
-                    T.start_task();
+                    Task_manager T;
+                    T.start_task(user_name);
                     break;
                 }
                 case 4:{
