@@ -145,63 +145,45 @@ class File_manager{
         tasklist.erase(tasklist.begin() + n);
     }
     void save_tasks(string user_name){
-        int n;
-        fstream outfile(user_name + "tasklist.txt", ios::out | ios::in | ios::app);
-
-        if(!outfile){
+        fstream file(user_name + "tasklist.txt", ios::out | ios::app);
+        if(!file){
             cout<<"File not found\n";
             exit(1);
         }
 
-        outfile >> n;
-
-        if(n > 0){
-        outfile.seekp(0,ios::beg);
-        outfile << n + tasklist.size() << endl;
-        outfile.seekp(0,ios::end);
+        for(size_t i = 0; i < tasklist.size(); i++){
+            
+            file << tasklist[i].taskname << '|';
+            file << tasklist[i].description << '|';
+            file << tasklist[i].priority << '|';
+            file << tasklist[i].completed << '|';
+            file << tasklist[i].due_date.year << '-';
+            file << tasklist[i].due_date.month << '-';
+            file << tasklist[i].due_date.day << endl;
         }
-        else{
-            outfile.seekp(0,ios::beg);
-            outfile << tasklist.size() << endl;
-        }
-
-        for(int i = 0; i < tasklist.size(); i++){
-            outfile << tasklist[i].taskname << '|';
-            outfile << tasklist[i].description << '|';
-            outfile << tasklist[i].priority << '|';
-            outfile << tasklist[i].completed << '|';
-            outfile << tasklist[i].due_date.year << '-';
-            outfile << tasklist[i].due_date.month << '-';
-            outfile << tasklist[i].due_date.day << endl;
-        }
-        outfile.close();
+        cout << "Tasks saved\n";
+        file.close();
     }
 
     vector<Task> load_tasks(string user_name){
         ifstream infile(user_name + "tasklist.txt");
-        int n;
 
         if(!infile){
             cout<<"File not found\n";
             exit(1);
         }
 
-        infile >> n;
-        infile.ignore();
         tasklist.clear();
         string line;
 
-        for(int i = 0; i < n; i++){
+        while(getline(infile,line)){
             Task task;
             char sep;
-
-            getline(infile,line);
 
             stringstream iss(line);
 
             getline(iss,task.taskname,'|');
             getline(iss,task.description,'|');
-
 
             iss >>task.priority >> sep >> task.completed >> sep >> task.due_date.year >> sep >> task.due_date.month >> sep >> task.due_date.day;
 
@@ -237,7 +219,6 @@ class Login_Mananger{
         file.close();
 
         ofstream outfile (user_name + "tasklist.txt");
-        outfile << 0;
         outfile.close();
     }
 
