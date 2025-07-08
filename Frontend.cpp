@@ -132,45 +132,56 @@ class Frontend_Manager{
         bar(560, 200, 640, 250);
         outtextxy(579, 214, "Start");
 
-        //Manage Task
-        settextstyle(SANS_SERIF_FONT, 0, 4);
-        setcolor(WHITE);
-        setbkcolor(BLUE);
-        setfillstyle(SOLID_FILL, BLUE);
-        bar(400, 300, 800, 380);
-        outtextxy(480, 324, "Manage Task");
+      // Manage Task
+setfillstyle(SOLID_FILL, DARKGRAY);
+bar(405, 305, 805, 385); // Shadow
+setfillstyle(SOLID_FILL, BLUE);
+bar(400, 300, 800, 380);
+setbkcolor(BLUE);
+setcolor(WHITE);
+settextstyle(SANS_SERIF_FONT, 0, 4);
+outtextxy(470, 324, "Manage Task");
 
-        //View Task
-        settextstyle(SANS_SERIF_FONT, 0, 4);
-        setcolor(WHITE);
-        setbkcolor(BLUE);
-        setfillstyle(SOLID_FILL, BLUE);
-        bar(400, 400, 800, 480);
-        outtextxy(480, 424, "View Task");
+// View Task
+setfillstyle(SOLID_FILL, DARKGRAY);
+bar(405, 405, 805, 485); // Shadow
+setfillstyle(SOLID_FILL, CYAN);
+bar(400, 400, 800, 480);
+setbkcolor(CYAN);
+setcolor(BLACK);
+settextstyle(SANS_SERIF_FONT, 0, 4);
+outtextxy(480, 424, "View Task");
 
-        //Search Task
-        settextstyle(SANS_SERIF_FONT, 0, 4);
-        setcolor(WHITE);
-        setbkcolor(BLUE);
-        setfillstyle(SOLID_FILL, BLUE);
-        bar(400, 500, 800, 580);
-        outtextxy(480, 524, "Search Task");
+// Search Task
+setfillstyle(SOLID_FILL, DARKGRAY);
+bar(405, 505, 805, 585); // Shadow
+setfillstyle(SOLID_FILL, MAGENTA);
+bar(400, 500, 800, 580);
+setbkcolor(MAGENTA);
+setcolor(WHITE);
+settextstyle(SANS_SERIF_FONT, 0, 4);
+outtextxy(470, 524, "Search Task");
 
-        //Show Statistics
-        settextstyle(SANS_SERIF_FONT, 0, 4);
-        setcolor(WHITE);
-        setbkcolor(BLUE);
-        setfillstyle(SOLID_FILL, BLUE);
-        bar(400, 600, 800, 680);
-        outtextxy(480, 624, "Show Statistics");
+// Show Statistics
+setfillstyle(SOLID_FILL, DARKGRAY);
+bar(405, 605, 805, 685); // Shadow
+setfillstyle(SOLID_FILL, GREEN);
+bar(400, 600, 800, 680);
+setbkcolor(GREEN);
+setcolor(WHITE);
+settextstyle(SANS_SERIF_FONT, 0, 4);
+outtextxy(450, 624, "Show Statistics");
 
-        //Logout
-        settextstyle(SANS_SERIF_FONT, 0, 2);
-        setcolor(WHITE);
-        setbkcolor(RED);
-        setfillstyle(SOLID_FILL, RED);
-        bar(1100, 10, 1180, 40);
-        outtextxy(1110, 12, "Logout");
+// Logout Button (Top-Right Corner)
+setfillstyle(SOLID_FILL, DARKGRAY);
+bar(1105, 15, 1185, 45); // Shadow
+setfillstyle(SOLID_FILL, RED);
+bar(1100, 10, 1180, 40);
+setbkcolor(RED);
+setcolor(WHITE);
+settextstyle(SANS_SERIF_FONT, 0, 2);
+outtextxy(1110, 14, "Logout");
+
 
         while(!selected){
             if(leftclick(500, 100, 900, 150, WHITE)){
@@ -255,6 +266,213 @@ class Frontend_Manager{
         string timeStr = ss.str(); 
         outtextxy(500, 100, (char*)timeStr.c_str()); 
     }
+
+
+
+
+     void managetask()
+     {
+    cleardevice();
+
+    // Title
+    settextstyle(BOLD_FONT, HORIZ_DIR, 5);
+    setcolor(BLUE);
+    outtextxy(420, 150, "Manage Tasks");
+
+    // Delete Task Button
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    bar(405, 305, 805, 385);  // Shadow
+    setfillstyle(SOLID_FILL, RED);
+    bar(400, 300, 800, 380);
+    setcolor(WHITE);
+    setbkcolor(RED);
+    settextstyle(SANS_SERIF_FONT, 0, 4);
+    outtextxy(500, 324, "Delete Task");
+
+    // Edit Task Button
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    bar(405, 405, 805, 485);  // Shadow
+    setfillstyle(SOLID_FILL, MAGENTA);
+    bar(400, 400, 800, 480);
+    setcolor(WHITE);
+    setbkcolor(MAGENTA);
+    settextstyle(SANS_SERIF_FONT, 0, 4);
+    outtextxy(510, 424, "Edit Task");
+
+    // Add Task Button
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    bar(405, 505, 805, 585);  // Shadow
+    setfillstyle(SOLID_FILL, GREEN);
+    bar(400, 500, 800, 580);
+    setcolor(WHITE);
+    setbkcolor(GREEN);
+    settextstyle(SANS_SERIF_FONT, 0, 4);
+    outtextxy(510, 524, "Add Task");
+
+    // Instruction
+    settextstyle(SANS_SERIF_FONT, 0, 1);
+    setbkcolor(WHITE);
+    setcolor(DARKGRAY);
+    outtextxy(450, 650, "Click on a button to continue.");
+}
+
+
+void addTaskForm() {
+    cleardevice();
+
+    setbkcolor(WHITE);
+    setcolor(BLACK);
+    setfillstyle(SOLID_FILL, WHITE);
+    bar(0, 0, getmaxx(), getmaxy());
+
+    // Back Arrow
+
+    setcolor(RED);
+    setfillstyle(SOLID_FILL, RED);
+    int arrowPoints[] = {
+        80, 40,   // Point 1 (top-right)
+        40, 60,   // Point 2 (tip of arrow)
+        80, 80,   // Point 3 (bottom-right)
+        80, 40    // Closing back to Point 1
+    };
+    fillpoly(4, arrowPoints);
+
+// Label "Back"
+setcolor(BLACK);
+setbkcolor(WHITE);
+settextstyle(SANS_SERIF_FONT, 0, 2);
+outtextxy(90, 52, "Back");
+
+// Label "Back"
+setcolor(BLACK);
+setbkcolor(WHITE);
+settextstyle(SANS_SERIF_FONT, 0, 2);
+outtextxy(90, 52, "Back"); // Adjust position as needed
+
+
+
+    // Title
+    settextstyle(BOLD_FONT, HORIZ_DIR, 3);
+    setcolor(BLACK);
+    outtextxy(500, 60, "Add New Task");
+
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 2);
+
+    // Title Field
+    setcolor(BLACK);
+    outtextxy(400, 150, "Title:");
+    rectangle(550, 145, 950, 180);
+
+    // Description Field
+    outtextxy(400, 210, "Description:");
+    rectangle(550, 205, 950, 240);
+
+    // Priority Field
+    outtextxy(400, 270, "Priority:");
+    rectangle(550, 265, 950, 300);
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 1);
+    setcolor(DARKGRAY);
+    outtextxy(560, 272, "eg: Low");
+
+    // Due Date Field
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 2);
+    setcolor(BLACK);
+    outtextxy(400, 330, "Due Date:");
+    rectangle(550, 325, 950, 360);
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 1);
+    setcolor(DARKGRAY);
+    outtextxy(560, 332, "YYYY-MM-DD");
+
+    // ADD TASK Button
+    setfillstyle(SOLID_FILL, GREEN);
+    bar(500, 400, 800, 450);
+    setcolor(BLACK);
+    setbkcolor(GREEN);
+    settextstyle(BOLD_FONT, HORIZ_DIR, 2);
+    outtextxy(580, 415, "ADD TASK");
+
+    // Input Variables
+    string title, description, priority_str, date_str;
+    Date due;
+    bool submitted = false;
+
+    while (!submitted) {
+        if (leftclick(550, 145, 950, 180, WHITE)) {
+            title = getInput(550, 145, 950, 180, WHITE);
+        }
+        if (leftclick(550, 205, 950, 240, WHITE)) {
+            description = getInput(550, 205, 950, 240, WHITE);
+        }
+        if (leftclick(550, 265, 950, 300, WHITE)) {
+            priority_str = getInput(550, 265, 950, 300, WHITE);
+        }
+        if (leftclick(550, 325, 950, 360, WHITE)) {
+            date_str = getInput(550, 325, 950, 360, WHITE);
+        }
+
+        // Submit
+        if (leftclick(500, 400, 800, 450, GREEN)) {
+            int priority = 0;
+            if (!priority_str.empty()) priority = stoi(priority_str);
+
+            stringstream ss(date_str);
+            int y, m, d;
+            char sep;
+            ss >> y >> sep >> m >> sep >> d;
+            due = Date(y, m, d);
+
+            Task newTask(1, title, description, due, priority, Pending);
+            cout << "Task Added:\n" << title << "\n" << description << "\n" << priority << "\n" << due.toString() << endl;
+
+            submitted = true;
+            delay(500);
+        }
+
+        // Back arrow
+        if (leftclick(30, 40, 60, 70, RED)) {
+            return;
+        }
+    }
+}
+
+
+
+void deleteTaskForm() {
+    cleardevice();
+
+    // Top Red Bar
+    setfillstyle(SOLID_FILL, RED);
+    bar(0, 0, getmaxx(), 50);
+    setbkcolor(RED);
+    setcolor(WHITE);
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 2);
+    outtextxy(20, 15, "Menu");
+
+    // Label: Delete Task
+    setbkcolor(WHITE);
+    setcolor(BLACK);
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 2);
+    outtextxy(400, 70, "Delete Task:");
+
+    // Input Box for Task Title or ID
+    rectangle(580, 65, 950, 95);
+
+    // Delete Button
+    setfillstyle(SOLID_FILL, BLUE);
+    bar(960, 65, 1050, 95);
+    setbkcolor(BLUE);
+    setcolor(WHITE);
+    settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 2);
+    outtextxy(970, 70, "Delete");
+
+    // Decorative Blue Box in center
+    setfillstyle(SOLID_FILL, BLUE);
+    bar(150, 200, 750, 350);
+
+    
+}
+
+
     string getUsername(string user_name){
         return user_name;
     }
@@ -263,12 +481,16 @@ class Frontend_Manager{
 };
 
 int main(){
+
     Frontend_Manager fm;
     initwindow(1200, 800, "Menu");
     setbkcolor(WHITE);
     cleardevice();
-    fm.LoginMenu();
-    fm.displayMainMenu();
+    //fm.LoginMenu();
+   // fm.displayMainMenu();
+    //fm.managetask();
+    //fm.addTaskForm();
+    fm.deleteTaskForm();
 
     getch();
     closegraph();
