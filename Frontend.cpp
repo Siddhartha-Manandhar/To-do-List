@@ -255,20 +255,161 @@ class Frontend_Manager{
         string timeStr = ss.str(); 
         outtextxy(500, 100, (char*)timeStr.c_str()); 
     }
-    string getUsername(string user_name){
-        return user_name;
+
+    void drawSearchIcon(int x, int y, int r) {
+        setlinestyle(0, 0, 3);
+        // Draw circle (lens)
+        circle(x, y, r);
+        // Draw handle
+        line(x + r * 0.7, y + r * 0.7, x + r * 1.5, y + r * 1.5);
     }
-    
-    
-};
+
+    void searchTask(){
+        cleardevice();
+
+        setcolor(BLACK);
+        rectangle(400, 10, 800, 50);
+
+        settextstyle(SANS_SERIF_FONT, 0, 2);
+        outtextxy(280, 18, "Search Task:");
+
+        // Draw search icon inside the rectangle
+        setcolor(DARKGRAY);
+        int iconX = 415;  // position inside the rectangle
+        int iconY = 25;
+        int iconR = 10;
+        drawSearchIcon(iconX, iconY, iconR);
+
+        settextstyle(SANS_SERIF_FONT, 0, 2);
+        setfillstyle(SOLID_FILL, BLUE);
+        setbkcolor(BLUE);
+        setcolor(WHITE);
+        bar(820, 13, 900, 47);
+        outtextxy(830, 18, "Search");
+
+        setfillstyle(SOLID_FILL, GREEN);
+        setbkcolor(GREEN);
+        bar(920, 13, 1000, 47);
+        outtextxy(930, 18, "Filter");
+
+        setfillstyle(SOLID_FILL, CYAN);
+        setbkcolor(CYAN);
+        bar(1020, 13, 1100, 47);
+        outtextxy(1030, 18, "Sort");
+
+
+
+        setfillstyle(SOLID_FILL, BLUE);
+        setlinestyle(SANS_SERIF_FONT, 0, 2);
+        setbkcolor(BLUE);
+
+        int marginX = 50;
+        int marginY = 100;
+        int gapX = 50;
+        int gapY = 50;
+
+        int boxWidth = 500;     // fits 2 columns with 50 gap
+        int boxHeight = 150;    // fits 3 rows with 20 gaps
+
+        for (int row = 0; row < 3; ++row) {
+            for (int col = 0; col < 2; ++col) {
+                int x1 = marginX + col * (boxWidth + gapX);
+                int y1 = marginY + row * (boxHeight + gapY);
+                int x2 = x1 + boxWidth;
+                int y2 = y1 + boxHeight;
+
+                bar(x1, y1, x2, y2);
+                outtextxy(x1 + 5, y1 + 5, "ID: ");
+                outtextxy(x1 + 5, y1 + 40, "Title: ");
+                outtextxy(x1 + 5, y1 + 75, "Due Date: ");
+                outtextxy(x1 + 250, y1 + 5, "Priority: ");
+                outtextxy(x1 + 250, y1 + 40, "Status: ");
+            }
+        }
+
+    }
+
+    void showStatistics(){
+        cleardevice();
+
+        int taskno = 10;
+
+        settextstyle(GOTHIC_FONT, 0, 5);
+        setcolor(BLACK);
+        outtextxy(460, 10, "Statistics:");
+        //Task Status
+        settextstyle(GOTHIC_FONT, 0, 2);
+        outtextxy(20, 120, "Task Status:");
+
+        setfillstyle(SOLID_FILL, BLUE);
+        bar(200, 100, 500, 160);
+        outtextxy(220, 170, "Pending: 5");
+
+        setfillstyle(SOLID_FILL, GREEN);
+        bar(500, 100, 800, 160);
+        outtextxy(520, 170, "Completed: 5");
+
+        setfillstyle(SOLID_FILL, LIGHTRED);
+        bar(800, 100, 1100, 160);
+        outtextxy(820, 170, "Overdue: 5");
+
+
+        //Priority
+        settextstyle(GOTHIC_FONT, 0, 2);
+        outtextxy(20, 220, "Priority:");
+
+        setfillstyle(SOLID_FILL, BLUE);
+        bar(200, 200, 400, 260);
+        outtextxy(220, 270, "Low: 3");
+
+        setfillstyle(SOLID_FILL, GREEN);
+        bar(400, 200, 900, 260);
+        outtextxy(520, 270, "Medium: 5");
+
+        setfillstyle(SOLID_FILL, LIGHTRED);
+        bar(900, 200, 1100, 260);
+        outtextxy(820, 270, "High: 4");
+
+        setfillstyle(SOLID_FILL, GREEN);
+        pieslice(300, 450, 90, 20, 100);
+        setfillstyle(SOLID_FILL, LIGHTGRAY);
+        pieslice(300, 450, 20, 90, 100);
+        setfillstyle(SOLID_FILL, WHITE);
+        pieslice(300, 450, 0, 180, 80);
+        pieslice(300, 450, 180, 360, 80);
+
+        outtextxy(200, 560, "Completed: 80%");
+        settextstyle(GOTHIC_FONT, 0, 4);
+        outtextxy(260, 430, "80%");
+
+        //Longest Overdue Task
+        settextstyle(GOTHIC_FONT, 0, 3);
+        outtextxy(500, 400, "Longest Overdue Task: Driving Lessons");
+        outtextxy(500, 460, "Overdue Time: 10 days");
+
+        //Next pending Task
+        settextstyle(GOTHIC_FONT, 0, 3);
+        outtextxy(500, 560, "Next pending Task: Study");
+        outtextxy(500, 620, "Due Date: 10/10/2023");
+
+    }
+
+        string getUsername(string user_name){
+            return user_name;
+        }
+        
+        
+    };
 
 int main(){
     Frontend_Manager fm;
     initwindow(1200, 800, "Menu");
     setbkcolor(WHITE);
     cleardevice();
-    fm.LoginMenu();
-    fm.displayMainMenu();
+     //fm.LoginMenu();
+     //fm.displayMainMenu();
+    //fm.searchTask();
+    fm.showStatistics();
 
     getch();
     closegraph();
