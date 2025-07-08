@@ -1,21 +1,265 @@
 #include<graphics.h>
 #include"Backend.h"
 class Frontend_Manager{
+    string user_name;
     public:
     void LoginMenu(){
-        setbkcolor(BLUE);
-        setfillstyle(SOLID_FILL, BLUE);
+        Login_Mananger lm;
+
+        settextstyle(SANS_SERIF_FONT, 0, 1);
+
+        //Username and Password
+        setbkcolor(LIGHTBLUE);
+        setfillstyle(SOLID_FILL, LIGHTBLUE);
         bar(200, 200, 1000, 600);
         setfillstyle(SOLID_FILL, WHITE);
-        settextstyle(SANS_SERIF_FONT, 0, 1);
         setcolor(WHITE);
         outtextxy(410, 260, "User Name:");
         bar(400, 280, 800, 320);
         outtextxy(410, 360, "Password:");
         bar(400, 380, 800, 420);
+
+        //Login and Register
+        setbkcolor(RED);
+        setfillstyle(SOLID_FILL, RED);
+        bar(400, 450, 480, 500);
         outtextxy(410, 460, "Login");
-        outtextxy(410, 540, "Register");
+        bar(690, 450, 800, 500);
+        outtextxy(710, 460, "Register");
+
+        bool log = false;
+
+        while(!log){
+            if(leftclick(400, 450, 480, 500, RED)){
+                lm.login_user();
+                log = true;
+                cout<<"Logged in\n";
+            }
+            if(leftclick(690, 450, 800, 500, RED)){
+                lm.register_user();
+                cout<<"Registered\n";
+                setfillstyle(SOLID_FILL, WHITE);
+                bar(400 + 2, 280 + 2, 800 - 2, 320 - 2);
+                bar(400 + 2, 380 + 2, 800 - 2, 420 - 2);
+            }
+            if(leftclick(400, 280, 800, 320, WHITE)){
+                user_name =getInput(400, 280, 800, 320, WHITE);
+                lm.getUsername(user_name);
+                cout<<user_name<<endl;
+                
+            }
+            if(leftclick(400, 380, 800, 420, WHITE)){
+                string password = getInput(400, 380, 800, 420, WHITE, true);
+                lm.getPassword(password);
+                cout<<password<<endl;
+            }
+            
+        }
     }
+
+    bool leftclick(int x1, int y1, int x2, int y2, int color){
+        int mx, my;
+        int selectcolor = WHITE;
+        setlinestyle(SOLID_LINE, 0, 5);
+
+        if (ismouseclick(WM_LBUTTONDOWN)) {
+            getmouseclick(WM_LBUTTONDOWN, mx, my);
+            clearmouseclick(WM_LBUTTONDOWN);
+        }
+            if (mx >= x1 && mx <= x2 && my >= y1 && my <= y2) {
+                if (color == WHITE) selectcolor = BLACK;
+                setcolor(selectcolor);
+                rectangle(x1, y1, x2, y2);  
+                mx = 0;
+                my = 0;
+                delay(100);
+                setcolor(color);
+                rectangle(x1, y1, x2, y2);
+                return true;
+            }
+
+        
+        return false;
+    }
+
+    string getInput(int x1, int y1, int x2, int y2, int color, bool hide = false, bool clock = false) {
+        char ch;
+        string inputString = "";
+        setbkcolor(WHITE);
+        if(!clock){settextstyle(SANS_SERIF_FONT, 0, 1);}
+        else {settextstyle(10, HORIZ_DIR, 5);}
+        
+        while (true) {
+            if (kbhit()) {
+                ch = getch();
+                if (ch == 13) { // Enter key
+                    return inputString;
+                } else if (ch == 8) { // Backspace
+                    if (!inputString.empty()) {
+                        inputString.pop_back();
+                    }
+                } else if (isprint(ch)) { // Printable characters
+                    if (textwidth((char*)inputString.c_str()) + 10 < (x2 - x1)) { // Prevent overflow
+                        inputString += ch;
+                    }
+                }
+
+                // Clear the input area
+                setfillstyle(SOLID_FILL, color);
+                bar(x1 + 2, y1 + 2, x2 - 2, y2 - 2);
+
+                // Render the string
+                string displayString = inputString;
+                if (hide) {
+                    displayString = string(inputString.size(), '*');
+                }
+                setcolor(BLACK);
+                outtextxy(x1 + 5, y1 + 5, (char*)displayString.c_str());
+            }
+        }
+    }
+
+    void displayMainMenu(){
+        bool selected = false;
+        int hours, minutes, seconds;
+
+        cleardevice();
+        DrawClock(0, 0, 0);
+        //Start
+        settextstyle(SANS_SERIF_FONT, 0, 2);
+        setbkcolor(LIGHTGREEN);
+        setfillstyle(SOLID_FILL, LIGHTGREEN);
+        bar(560, 200, 640, 250);
+        outtextxy(579, 214, "Start");
+
+        //Manage Task
+        settextstyle(SANS_SERIF_FONT, 0, 4);
+        setcolor(WHITE);
+        setbkcolor(BLUE);
+        setfillstyle(SOLID_FILL, BLUE);
+        bar(400, 300, 800, 380);
+        outtextxy(480, 324, "Manage Task");
+
+        //View Task
+        settextstyle(SANS_SERIF_FONT, 0, 4);
+        setcolor(WHITE);
+        setbkcolor(BLUE);
+        setfillstyle(SOLID_FILL, BLUE);
+        bar(400, 400, 800, 480);
+        outtextxy(480, 424, "View Task");
+
+        //Search Task
+        settextstyle(SANS_SERIF_FONT, 0, 4);
+        setcolor(WHITE);
+        setbkcolor(BLUE);
+        setfillstyle(SOLID_FILL, BLUE);
+        bar(400, 500, 800, 580);
+        outtextxy(480, 524, "Search Task");
+
+        //Show Statistics
+        settextstyle(SANS_SERIF_FONT, 0, 4);
+        setcolor(WHITE);
+        setbkcolor(BLUE);
+        setfillstyle(SOLID_FILL, BLUE);
+        bar(400, 600, 800, 680);
+        outtextxy(480, 624, "Show Statistics");
+
+        //Logout
+        settextstyle(SANS_SERIF_FONT, 0, 2);
+        setcolor(WHITE);
+        setbkcolor(RED);
+        setfillstyle(SOLID_FILL, RED);
+        bar(1100, 10, 1180, 40);
+        outtextxy(1110, 12, "Logout");
+
+        while(!selected){
+            if(leftclick(500, 100, 900, 150, WHITE)){
+                string line = getInput(500, 100, 900, 150, WHITE, false, true);
+                stringstream ss(line);
+                char sep;
+                ss >> hours >> sep >> minutes >> sep >> seconds;
+            }
+            if(leftclick(560, 200, 640, 250, LIGHTGREEN)){
+                Timer_Mananger timer(hours, minutes, seconds);
+                timer.stopped = false;
+                cout<<"Timer started\n";
+                Timer(timer);
+            }
+        }
+        
+
+            
+            
+    }
+
+    void Timer(Timer_Mananger timer){
+        timer.isValid();
+        
+        while(timer.isTimeRemaining() || timer.stopped){
+            drawTimeButtons(timer);
+            if(!timer.paused){
+                DrawClock(timer.hours, timer.minutes, timer.seconds);
+                delay(1000);
+                timer.decrementTime();
+            }
+        }
+        DrawClock(0, 0, 0);
+        timer.playAlarm();
+    }
+
+    void drawTimeButtons(Timer_Mananger &timer){
+        settextstyle(SANS_SERIF_FONT, 0, 2);
+
+                //Stop
+                setbkcolor(RED);
+                setfillstyle(SOLID_FILL, RED);
+                bar(560, 200, 640, 250);
+                outtextxy(579, 214, "Stop");
+
+                //Pause
+                setbkcolor(YELLOW);
+                setfillstyle(SOLID_FILL, YELLOW);
+                bar(740, 200, 820, 250);
+                outtextxy(755, 214, "Pause");
+
+                //Resume
+                setbkcolor(GREEN);
+                setfillstyle(SOLID_FILL, GREEN);
+                bar(380, 200, 460, 250);
+                outtextxy(385, 214, "Resume");
+
+                if(leftclick(560, 200, 640, 250, RED)){
+                    timer.reset(0,0,0);
+                    cout<<"Stopped"<<endl;
+                    timer.stopped = true;
+                }
+                if(leftclick(740, 200, 820, 250, YELLOW)){
+                    timer.paused = true;
+                    cout<<"Paused"<<endl;
+                }
+                if(leftclick(380, 200, 460, 250, GREEN)){
+                    timer.paused = false;
+                    cout<<"Resumed"<<endl;
+                }
+    }
+    void DrawClock(int h, int m, int s) {
+        setbkcolor(WHITE); 
+        setcolor(BLACK); 
+        settextstyle(10, HORIZ_DIR, 5); 
+        
+        stringstream ss;
+        ss << (h < 10 ? "0" : "") << h << ":" 
+        << (m < 10 ? "0" : "") << m << ":" 
+        << (s < 10 ? "0" : "") << s;
+
+        string timeStr = ss.str(); 
+        outtextxy(500, 100, (char*)timeStr.c_str()); 
+    }
+    string getUsername(string user_name){
+        return user_name;
+    }
+    
+    
 };
 
 int main(){
@@ -23,8 +267,8 @@ int main(){
     initwindow(1200, 800, "Menu");
     setbkcolor(WHITE);
     cleardevice();
-
     fm.LoginMenu();
+    fm.displayMainMenu();
 
     getch();
     closegraph();

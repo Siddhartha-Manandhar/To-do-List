@@ -500,9 +500,10 @@ class Task_Mananger{
 };
 
 class Timer_Mananger{
-private:
+public:
     int hours, minutes, seconds;
     bool paused;
+    bool stopped;
 
     void playAlarm() {
     cout << "\nTime's up! Press any key to stop the alarm.\n";
@@ -543,8 +544,7 @@ private:
              << setw(2) << setfill('0') << seconds << flush;
     }
 
-public:
-    Timer_Mananger(int h, int m, int s) : hours(h), minutes(m), seconds(s), paused(false) {}
+    Timer_Mananger(int h, int m, int s) : hours(h), minutes(m), seconds(s), paused(false), stopped(true) {}
 
     bool isValid() const {
         return hours >= 0 && minutes >= 0 && seconds >= 0 &&
@@ -596,19 +596,13 @@ class Login_Mananger{
 
     public:
     void register_user(){
-        cout << "Enter a user name: ";
-        cin >> user_name;
-
-        cout << "Enter a password: ";
-        cin >> password;
-
         fstream file ("user_info.txt", ios::out | ios::app);
         if(!file){
             cout<<"File not found\n";
             exit(1);
         }
 
-        file << user_name << '|' << password << endl;
+        file << user_name << '|' << encryption(password, password.length()) << endl;
         file.close();
 
         ofstream outfile (user_name + "tasklist.txt");
@@ -616,13 +610,6 @@ class Login_Mananger{
     }
 
     string login_user(){
-
-        cout << "Enter a user name: ";
-        cin >> user_name;
-
-        cout<< "Enter a password: ";
-        cin >> password;
-
         ifstream infile ("user_info.txt");
 
         if(!infile){
@@ -637,7 +624,7 @@ class Login_Mananger{
             stringstream ss(line);
             getline(ss,Uname,'|');
             getline(ss,Pwd,'|');
-            if(user_name == Uname && password == Pwd){
+            if(user_name == Uname && password == decryption(Pwd, password.length())){
                 infile.close();
                 return Uname;
             }
@@ -670,6 +657,8 @@ class Login_Mananger{
     string decryption(string password, int key) {
         return encryption(password, 26 - key, 10 - key);
     }
+    void getUsername(string username) { user_name = username; }
+    void getPassword(string password) { this->password = password; }
 
 };
 #endif
