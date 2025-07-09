@@ -122,7 +122,8 @@ class Frontend_Manager{
     void displayMainMenu(){
         bool selected = false;
         int hours, minutes, seconds;
-
+    
+        setbkcolor(WHITE);
         cleardevice();
         DrawClock(0, 0, 0);
         //Start
@@ -183,19 +184,32 @@ class Frontend_Manager{
                 Timer_Mananger timer(hours, minutes, seconds);
                 timer.stopped = false;
                 cout<<"Timer started\n";
-                Timer(timer);
+                Timer(timer);  
+            }
+            if(leftclick(400, 300, 800, 380, BLUE)){
+                ManageTask();
+            }
+            if(leftclick(400, 400, 800, 480, BLUE)){
+                ViewTask();
+            }
+            if(leftclick(400, 500, 800, 580, BLUE)){
+                SearchTask();
+            }
+            if(leftclick(400, 600, 800, 680, BLUE)){
+                ShowStatistics();
+            }
+            if(leftclick(1100, 10, 1180, 40, RED)){
+                selected = true;
             }
         }
-        
-
-            
-            
+               
     }
 
     void Timer(Timer_Mananger timer){
+        bool alarm = false;
         timer.isValid();
         
-        while(timer.isTimeRemaining() || timer.stopped){
+        while(timer.isTimeRemaining() && !timer.stopped){
             drawTimeButtons(timer);
             if(!timer.paused){
                 DrawClock(timer.hours, timer.minutes, timer.seconds);
@@ -205,6 +219,30 @@ class Frontend_Manager{
         }
         DrawClock(0, 0, 0);
         timer.playAlarm();
+        alarm = true;
+
+        setfillstyle(SOLID_FILL, WHITE);
+        bar(380, 200, 460, 250);
+        bar(740, 200, 820, 250);
+        bar(380, 200, 820, 250);
+
+        settextstyle(SANS_SERIF_FONT, 0, 2);
+        setbkcolor(CYAN);
+        setfillstyle(SOLID_FILL, CYAN);
+        bar(560, 200, 640, 250);
+        outtextxy(579, 214, "Slience");
+
+        int waitTime = 0;
+        while(alarm && waitTime < 10000){ // wait max 10 sec
+            if(leftclick(560, 200, 640, 250, CYAN)){
+                PlaySound(NULL, 0, 0);
+                alarm = false;
+            }
+            delay(100); // prevent CPU overload
+            waitTime += 100;
+        }
+
+        displayMainMenu();
     }
 
     void drawTimeButtons(Timer_Mananger &timer){
@@ -407,9 +445,9 @@ int main(){
     setbkcolor(WHITE);
     cleardevice();
      //fm.LoginMenu();
-     //fm.displayMainMenu();
+     fm.displayMainMenu();
     //fm.searchTask();
-    fm.showStatistics();
+    //fm.showStatistics();
 
     getch();
     closegraph();

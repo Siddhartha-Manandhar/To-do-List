@@ -512,12 +512,12 @@ public:
     PlaySoundA("alarm.wav", NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
     // Wait for any key to stop
-    getch();
+   // getch();
 
     // Stop the sound
-    PlaySoundA(NULL, 0, 0);
+   // PlaySoundA(NULL, 0, 0);
 
-    cout << "Alarm stopped.\n";
+   // cout << "Alarm stopped.\n";
 }
 
     void decrementTime() {
