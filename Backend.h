@@ -131,29 +131,19 @@ class Task{
     void markOverdue(){
         status = Overdue;
     }
-    void editTask(){
-        string input;
-
-        cout << "Current Title: " << title << endl;
-        cout << "Enter new title: ";
-        getline(cin, input);
-        if(!input.empty()){
-            title = input;
+    void editTask(string TITLE, string DESCRIPTION, string DUE_DATE, string PRIORITY, string STATUS){
+        
+        if(!TITLE.empty()){
+            title = TITLE;
         }
 
-        cout << "Current Description: " << description << endl;
-        cout << "Enter new description: ";
-        getline(cin, input);
-        if(!input.empty()){
-            description = input;
+        if(!DESCRIPTION.empty()){
+            description = DESCRIPTION;
         }
 
-        cout << duedate.toString() << endl;
-        cout << "Enter new due date: ";
-        getline(cin, input);
-        if(!input.empty()){
+        if(!DUE_DATE.empty()){
             // duedate = Date(stoi(input.substr(0, 4)), stoi(input.substr(5, 2)), stoi(input.substr(8, 2)));
-            stringstream ss(input);
+            stringstream ss(DUE_DATE);
             int new_year;
             int new_month;
             int new_day;
@@ -162,18 +152,28 @@ class Task{
             duedate = Date(new_year, new_month, new_day);
         }
 
-        cout << "Current Priority: " << priority << endl;
-        cout << "Enter new priority(low = 0, medium = 1, high = 2): ";
-        getline(cin, input);
-        if(!input.empty()){
-            priority = stoi(input);
+        if(!PRIORITY.empty()){
+            if(PRIORITY ==  "low" || PRIORITY == "Low" || PRIORITY == "LOW"){
+                priority = 0;
+            }
+            else if(PRIORITY ==  "medium" || PRIORITY == "Medium" || PRIORITY == "MEDIUM"){
+                priority = 1;
+            }
+            else if(PRIORITY ==  "high" || PRIORITY == "High" || PRIORITY == "HIGH"){
+                priority = 2;
+            }
         }
 
-        cout << "Current Status: " << status << endl;
-        cout << "Enter new status(pending = 0, completed = 1, overdue = 2): ";
-        getline(cin, input);
-        if(!input.empty()){
-            status = stoi(input);
+        if(!STATUS.empty()){
+            if(STATUS ==  "pending" || STATUS == "Pending" || STATUS == "PENDING"){
+                status = 0;
+            }
+            else if(STATUS ==  "completed" || STATUS == "Completed" || STATUS == "COMPLETED"){
+                status = 1;
+            }
+            else if(STATUS ==  "overdue" || STATUS == "Overdue" || STATUS == "OVERDUE"){
+                status = 2;
+            }
         }
     }
 
@@ -234,7 +234,7 @@ class File_Manager{
 
     vector<Task> loadTasks(string user_name){
 
-        vector<Task> tasklist;
+        static vector<Task> tasklist;
         ifstream infile(user_name + "tasklist.txt");
 
         if (!infile) {
@@ -268,9 +268,9 @@ class File_Manager{
 
 class Task_Mananger{
 
-    vector<Task> tasklist;
-
     public:
+    static vector<Task> tasklist;
+
     void addTask(Task task){
         tasklist.push_back(task);
     }
@@ -361,7 +361,7 @@ class Task_Mananger{
         }
     }
 
-    vector<Task> sortTask(int choice = 1){
+    static vector<Task> sortTask(int choice = 1){
 
         switch(choice){
             case 1:{
